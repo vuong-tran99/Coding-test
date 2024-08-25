@@ -1,0 +1,15 @@
+.App {
+    padding: 40px;
+}
+
+h3 {
+    text-transform: uppercase;
+}
+
+.point {
+    display: flex;
+}
+
+.time {
+    display: flex;
+}
