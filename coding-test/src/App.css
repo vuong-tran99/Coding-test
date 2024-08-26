@@ -13,3 +13,8 @@ h3 {
 .time {
     display: flex;
 }
+  
+.hidden {
+    opacity: 0; /* Hoặc dùng display: none; nếu bạn không muốn thẻ còn chiếm không gian */
+    transition: opacity 2s ease-out;
+}
