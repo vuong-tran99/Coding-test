@@ -11,10 +11,32 @@ h3 {
 }
 
 .time {
+    margin-top: 8px;
     display: flex;
 }
   
 .hidden {
     opacity: 0; /* Hoặc dùng display: none; nếu bạn không muốn thẻ còn chiếm không gian */
     transition: opacity 2s ease-out;
+}
+
+.win {
+    color: green;
+}
+
+.lose {
+    color: red;
+}
+
+.btnPlay {
+    padding: 2px 28px;
+    margin: 12px 0;
+}
+
+.labelPoint {
+    margin-right: 82px;
+}
+
+.labelTime {
+    margin-right: 90px;
 }

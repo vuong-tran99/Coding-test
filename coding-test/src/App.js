@@ -8,10 +8,11 @@ function App() {
   const [playMode, setplayMode] = useState(true);
   const [timer, setTimer] = useState(0);
   const [intervalId, setIntervalId] = useState(null);
-  const [order, setOrder] = useState(0);
-  const svgWidth = 1280;
+  const [order, setOrder] = useState(1);
+  const [result, setResult] = useState("Let's play");
+  const svgWidth = 600;
   const svgHeight = 500;
-  const padding = 20; // Khoảng cách từ các điểm tới cạnh SVG
+  const padding = 20;
 
   const handleRender = () => {
     const newPoints = [];
@@ -23,7 +24,7 @@ function App() {
       const y = Math.floor(Math.random() * (svgHeight - padding * 2)) + padding;
       const overlaps = newPoints.some((point) => {
         const distance = Math.sqrt((point.x - x) ** 2 + (point.y - y) ** 2);
-        return distance < 20; // Minimum distance between points is 20
+        return distance < 20;
       });
 
       if (!overlaps) {
@@ -42,11 +43,12 @@ function App() {
   };
     
   const handleButtonClick = () => {
+    setOrder(1);
+    setResult("Let's play")
     if (numPoints <= 0) {
       return;
     }
     handleRender();
-    // setShowPoints(true);
     setplayMode(false);
     setTimer(0);
     if (intervalId) {
@@ -59,39 +61,49 @@ function App() {
   
     setIntervalId(newIntervalId);
   
-    // Return a cleanup function to clear the interval when the component unmounts
     return () => clearInterval(newIntervalId);
   };
 
   const handlePoint = (p) => {
-    if (p.label < order) {
-      console.log(p.label)
+    if (p.label === order) {
+      const copyPoints = [...points];
+      copyPoints.forEach((point, index) => {
+        if (point.id === p.id) {
+          copyPoints[index] = { ...point, activate: true };
+        }
+      });
+  
+      setOrder(p.label + 1)
+      setPoints(copyPoints)
+
+      if (p.label == numPoints) {
+        const timer = setTimeout(() => {
+          setResult("All Cleared");
+          clearInterval(intervalId);
+        }, 2000);
+      }
+    } else {
+      clearInterval(intervalId);
+      setResult("Game over")
       return;
     }
-    const copyPoints = [...points];
-    copyPoints.forEach((point, index) => {
-      if (point.id === p.id) {
-        copyPoints[index] = { ...point, activate: true };
-      }
-    });
-    setOrder(p.label)
-
-    setPoints(copyPoints)
   };
 
   return (
     <div className="App">
        <div>
-         <h3>Let's play</h3>
+        {
+          result === "Let's play" ? <h3>{ result }</h3> : <h3 className={ result === "Game over" ? 'lose' : 'win'}>{ result }</h3>
+        }
          <div className="point">
-           <div>Points</div>
+           <div className='labelPoint'>Points</div>
            <input type='number' value={numPoints} onChange={handleInputChange} />
          </div>
          <div className="time">
-           <div>Time</div>
+           <div className='labelTime'>Time</div>
            <div>{timer.toFixed(1)}</div>
          </div>
-         <button onClick={handleButtonClick}>{playMode ? 'Play' : 'Restart'}</button>
+         <button className='btnPlay' onClick={handleButtonClick}>{playMode ? 'Play' : 'Restart'}</button>
        </div>
 
        <div style={{ width: `${svgWidth}px`, height: `${svgHeight}px`, border: `1px solid black` }}>
